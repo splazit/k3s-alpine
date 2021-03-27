@@ -1,5 +1,5 @@
 # k3s-alpine
-Quick setup k3s cluster with alpine images.
+Quick setup k3s cluster with alpine linux.
 ## Prerequisite
 - vagrant and its [reload plugin](https://github.com/aidanns/vagrant-reload)
 - virtual box
