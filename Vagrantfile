@@ -65,39 +65,39 @@ Vagrant.configure("2") do |config|
   config.vm.provider 'virtualbox' do |vb|
     vb.linked_clone = true
     vb.cpus = 2
-    vb.memory = 2048
+    vb.memory = 3072
   end
 
   #
   # View the documentation for the provider you are using for more
   # information on available options.
 
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
-  # documentation for more information about their specific syntax and use.
+  # create master nodes
   (1..number_of_server_nodes).each do |n|
     name = "server#{n}"
     fqdn = "#{name}.example.test"
-    ip_address = server_node_ip_address.to_s; server_node_ip_address = server_node_ip_address.succ
+    server_ip_address = server_node_ip_address.to_s; server_node_ip_address = server_node_ip_address.succ
     config.vm.define name do |config|
       config.vm.hostname = fqdn
-      config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false  
+      config.vm.network :private_network, ip: server_ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false  
       config.vm.provision "shell", path: 'provision-base.sh'
       config.vm.provision :reload
-      config.vm.provision "shell", path: 'post-server.sh', args: [k3s_token, ip_address, first_server_node_ip] 
+      config.vm.provision "shell", path: 'post-server.sh', args: [k3s_token, server_ip_address, first_server_node_ip] 
     end
   end
 
+  # create agent nodes
   (1..number_of_agent_nodes).each do |n|
     name = "agent#{n}"
     fqdn = "#{name}.example.test"
-    ip_address = agent_node_ip_address.to_s; agent_node_ip_address = server_node_ip_address.succ
+    agent_ip_address = agent_node_ip_address.to_s; agent_node_ip_address = agent_node_ip_address.succ
     config.vm.define name do |config|
       config.vm.hostname = fqdn
-      config.vm.network :private_network, ip: ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false  
+      config.vm.network :private_network, ip: agent_ip_address, libvirt__forward_mode: 'none', libvirt__dhcp_enabled: false  
       config.vm.provision "shell", path: 'provision-base.sh'
       config.vm.provision :reload
-      config.vm.provision "shell", path: 'post-agent.sh', args: [k3s_token, ip_address, first_server_node_ip] 
+      config.vm.provision "shell", path: 'post-agent.sh', args: [k3s_token, agent_ip_address, first_server_node_ip] 
     end
-  end  
+  end
+
 end
