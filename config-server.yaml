@@ -1,0 +1,11 @@
+ssh_authorized_keys:
+- "github:splazit"
+k3os:
+  dns_nameservers:
+  - 8.8.8.8
+  - 1.1.1.1
+  password: "$1$ZRhKNwyq$0fD2CBLZyUuznYQfD1eVy1"
+  token: "2b23b8a989d7b186656a91ec17796faaccce348738aaff3376ce67e0d8bd97c92a619d1c"
+  server_url: https://k3os-6063:6443
+  k3s_args:
+  - server
